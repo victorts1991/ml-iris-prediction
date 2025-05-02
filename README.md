@@ -1,6 +1,6 @@
 # ml-iris-prediction
 
-A Flask API that consumes a prediction model trained by the Logistic Regression Classification algorithm. Deploy with IaC using Docker and Kubernetes on GCP.
+A Flask API that consumes a prediction model trained by the Logistic Regression Classification algorithm. Deploy with IaC and Github Actions using Docker and Kubernetes on GCP.
 
 # Deploy local:
 

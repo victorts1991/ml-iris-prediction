@@ -151,5 +151,10 @@ def list_predictions():
         })
     return jsonify(results)
 
+@app.route("/health", methods=["GET"])
+def health():
+    return "OK", 200
+
+
 if __name__ == "__main__":
     app.run(debug=True)

@@ -57,4 +57,4 @@ kubectl apply -f svc.yaml
 4. Após isso aguarde alguns minutos até que o cluster autopilot do GKE provisione os recursos necessários;
 5. Após os recursos estarem devidamente provisionados, acesse o seguinte link na plataforma do Google Cloud: Kubernetes Engine->Gateways, serviços e entrada;
 6. Clique na aba serviços e copie a url que está na coluna "Pontos de extremidade" do serviço chamado "svc-ml-iris-prediction" que acabou de ser criado;
-7. Com este link é possível efetuar as chamadas dos endpoints da api em Flask que consome o modelo;
+7. Com este link é possível efetuar as chamadas dos endpoints da api em Flask que consome o modelo de previsão treinado pelo algoritmo de Classificação de Regressão Logística;

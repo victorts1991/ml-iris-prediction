@@ -34,7 +34,8 @@ pip freeze > requirements.txt
 
 1. Crie um projeto no Google Cloud chamado "ml-iris-prediction";
 2. Ative a API do Kubernetes;
-3. Execute os comandos abaixo:
+3. Vá até o menu Artifact Registry->Repositórios e crie um novo respositório com o nome "ml-iris-prediction" na região us-central1;
+4. Execute os comandos abaixo:
 
 ```
 docker build -t api-ml-iris-prediction .  
@@ -54,22 +55,22 @@ kubectl apply -f deployment.yaml
 kubectl apply -f svc.yaml
 ```
 
-4. Após isso aguarde alguns minutos até que o cluster autopilot do GKE provisione os recursos necessários;
-5. Após os recursos estarem devidamente provisionados, acesse o seguinte link na plataforma do Google Cloud: Kubernetes Engine->Gateways, serviços e entrada;
-6. Clique na aba serviços e copie a url que está na coluna "Pontos de extremidade" do serviço chamado "svc-ml-iris-prediction" que acabou de ser criado;
-7. Com este link é possível efetuar as chamadas dos endpoints da api em Flask que consome o modelo de predição treinado pelo algoritmo de Classificação de Regressão Logística;
+5. Após isso aguarde alguns minutos até que o cluster autopilot do GKE provisione os recursos necessários;
+6. Após os recursos estarem devidamente provisionados, acesse o seguinte link na plataforma do Google Cloud: Kubernetes Engine->Gateways, serviços e entrada;
+7. Clique na aba serviços e copie a url que está na coluna "Pontos de extremidade" do serviço chamado "svc-ml-iris-prediction" que acabou de ser criado;
+8. Com este link é possível efetuar as chamadas dos endpoints da api em Flask que consome o modelo de predição treinado pelo algoritmo de Classificação de Regressão Logística;
 
 # Deploy with Kubernetes on GCP with Github Actions:
 
-1. Execute os itens 1 e 2 do passo a passo acima;
+1. Execute os itens 1, 2 e 3 do passo a passo acima;
 2. Na plataforma do Google Cloud acesse o menu IAM e administrador->Contas de serviço;
 3. Clique em "Criar conta de serviço" na parte superior da página;
 4. Na página "Criar conta de serviço", forneça um Nome da conta de serviço descritivo (por exemplo, github-actions-deploy);
 5. Clique em "Criar e continuar";
 6. Na seção "Conceder à conta de serviço acesso ao projeto", você precisará atribuir os papéis (permissões) necessários para que o GitHub Actions possa interagir com o GKE e o GCR. Aqui estão os papéis mínimos:
-  6.1: Kubernetes Engine Admin: Permite gerenciar clusters GKE;
-  6.2: Artifact Registry Writer: Permite enviar imagens para o Google Container Registry (GCR) ou Artifact Registry (se você estiver usando);
-  6.3: Service Account User: Permite que a conta de serviço atue como outras contas de serviço, se necessário;
+  - 6.1: Kubernetes Engine Admin: Permite gerenciar clusters GKE;
+  - 6.2: Artifact Registry Writer: Permite enviar imagens para o Artifact Registry;
+  - 6.3: Service Account User: Permite que a conta de serviço atue como outras contas de serviço, se necessário;
 7. Clique em "Continuar" e depois em "Concluir";
 8. Após o usuário estar criado, acesse os detalhes do mesmo, vá até a aba "Chaves", e adicione uma nova chave em JSON;
 9. Com isso será feito o download da sua chave;
@@ -80,4 +81,4 @@ kubectl apply -f svc.yaml
 14. No campo Value, cole o conteúdo completo do arquivo JSON que você baixou. Certifique-se de incluir as chaves { e } no início e no final;
 15. Clique em "Add secret" (Adicionar segredo);
 16. Após isso efetue um commit na branch main, com isso o pipeline do Github Actions será acionado e efetuará o deploy da aplicação no GKE;
-17. Após o pipeline ter sido concluido, execute os itens 4, 5, 6 e 7 do passo a passo acima;
+17. Após o pipeline ter sido concluido, execute os itens 5, 6, 7 e 8 do passo a passo acima;

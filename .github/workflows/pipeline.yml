@@ -12,32 +12,59 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
+
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v2
       with:
-        credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }} 
+        credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+
     - name: Configure Docker for GCR
       run: |
         gcloud auth configure-docker gcr.io
+
     - name: Install kubectl
       uses: azure/setup-kubectl@v3
       id: install-kubectl
+
     - name: Setup Terraform CLI
       uses: hashicorp/setup-terraform@v2.0.2
+
     - name: Get GKE Cluster Credentials
       run: |
         gcloud container clusters get-credentials cluster-ml-iris-prediction --region us-central1 --project ml-iris-prediction
+
     - name: Build, tag, and push image to GCR
       run: |
         docker build -t api-ml-iris-prediction .
         docker tag api-ml-iris-prediction gcr.io/ml-iris-prediction/api-ml-iris-prediction:latest
         docker push gcr.io/ml-iris-prediction/api-ml-iris-prediction:latest
-    - name: Setup Cluster (Terraform)
+        
+    - name: Terraform Init
+      id: init
       run: |
         cd ./iac
         terraform init
-        terraform plan
-        terraform apply --auto-approve
+    
+    - name: Terraform Validate
+      id: validate
+      run: |
+        cd ./iac
+        terraform validate -no-color
+    
+    - name: Terraform Plan
+      id: plan
+      run: |
+        cd ./iac
+        terraform plan -no-color
+      continue-on-error: true    
+
+    - name: Terraform Apply
+      id: apply
+      run: |
+        cd ./iac
+        terraform apply -auto-approve
+      continue-on-error: true
+
     - name: Deploy API to GKE
       run: |
         cd ./iac/kubernetes-yamls

@@ -33,10 +33,14 @@ jobs:
       run: |
         gcloud container clusters get-credentials cluster-ml-iris-prediction --region us-central1 --project ml-iris-prediction
 
-    - name: Install gke-gcloud-auth-plugin
+    - name: Add Google Cloud APT repository and install gke-gcloud-auth-plugin
       run: |
         sudo apt-get update
-        sudo apt-get install -y google-cloud-cli-gke-gcloud-auth-plugin
+        sudo apt-get install -y apt-transport-https ca-certificates
+        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+        curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+        sudo apt-get update
+        sudo apt-get install -y google-cloud-cli-gke-auth-plugin
 
     - name: Build, tag, and push image to GCR
       run: |

@@ -1,0 +1,43 @@
+name: Api ML Iris Prediction (GCP)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  deploy-gke:
+    name: Deploy to GKE
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }} 
+    - name: Configure Docker for GCR
+      run: |
+        gcloud auth configure-docker gcr.io
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      id: install-kubectl
+    - name: Get GKE Cluster Credentials
+      run: |
+        gcloud container clusters get-credentials cluster-ml-iris-prediction --region us-central1 --project ml-iris-prediction
+    - name: Build, tag, and push image to GCR
+      run: |
+        docker build -t api-ml-iris-prediction .
+        docker tag api-ml-iris-prediction gcr.io/ml-iris-prediction/api-ml-iris-prediction:latest
+        docker push gcr.io/ml-iris-prediction/api-ml-iris-prediction:latest
+    - name: Setup Cluster (Terraform)
+      run: |
+        cd ./iac
+        terraform init
+        terraform plan
+        terraform apply --auto-approve
+    - name: Deploy API to GKE
+      run: |
+        cd ./iac/kubernetes-yamls
+        kubectl apply -f deployment.yaml
+        kubectl apply -f svc.yaml

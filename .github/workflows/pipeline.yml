@@ -24,9 +24,9 @@ jobs:
 
     - name: Install kubectl
       run: |
-        grep -rhE ^deb /etc/apt/sources.list* | grep "cloud-sdk"
         apt-get update
         apt-get install -y kubectl
+        apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
 
     - name: Setup Terraform CLI
       uses: hashicorp/setup-terraform@v2.0.2

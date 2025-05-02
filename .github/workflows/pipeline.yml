@@ -22,9 +22,9 @@ jobs:
       run: |
         gcloud auth configure-docker gcr.io
 
-    - name: Install kubectl
-      uses: azure/setup-kubectl@v3
-      id: install-kubectl
+    - name: Install kubectl using gcloud
+      run: |
+        gcloud components install kubectl
 
     - name: Setup Terraform CLI
       uses: hashicorp/setup-terraform@v2.0.2
@@ -32,15 +32,6 @@ jobs:
     - name: Get GKE Cluster Credentials
       run: |
         gcloud container clusters get-credentials cluster-ml-iris-prediction --region us-central1 --project ml-iris-prediction
-
-    - name: Add Google Cloud APT repository and install gke-gcloud-auth-plugin
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y apt-transport-https ca-certificates
-        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://apt.kubernetes.io/ kubernetes-apt-release main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-        curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-        sudo apt-get update
-        sudo apt-get install -y google-cloud-cli-gke-auth-plugin
 
     - name: Build, tag, and push image to GCR
       run: |

@@ -35,10 +35,6 @@ jobs:
     - name: Setup Terraform CLI
       uses: hashicorp/setup-terraform@v2.0.2
 
-    - name: Get GKE Cluster Credentials
-      run: |
-        gcloud container clusters get-credentials cluster-ml-iris-prediction --region us-central1 --project ml-iris-prediction
-
     - name: Build, tag, and push image to GCR
       run: |
         docker build -t api-ml-iris-prediction .
@@ -70,6 +66,10 @@ jobs:
         cd ./iac
         terraform apply -auto-approve
       continue-on-error: true
+    
+    - name: Get GKE Cluster Credentials
+      run: |
+        gcloud container clusters get-credentials cluster-ml-iris-prediction --region us-central1 --project ml-iris-prediction
 
     - name: Deploy API to GKE
       run: |

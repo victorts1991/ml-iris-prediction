@@ -68,7 +68,7 @@ kubectl apply -f svc.yaml
 5. Clique em "Criar e continuar";
 6. Na seção "Conceder à conta de serviço acesso ao projeto", você precisará atribuir os papéis (permissões) necessários para que o GitHub Actions possa interagir com o GKE e o GCR. Aqui estão os papéis mínimos:
   - 6.1: Kubernetes Engine Admin: Permite gerenciar clusters GKE;
-  - 6.2: Artifact Registry Admin: Permite enviar imagens e criar respositórios no Artifact Registry;
+  - 6.2: Create-on-Push Repository Manager in Artifact Registry: Permite enviar imagens e criar respositórios no Artifact Registry;
   - 6.3: Service Account User: Permite que a conta de serviço atue como outras contas de serviço, se necessário;
 7. Clique em "Continuar" e depois em "Concluir";
 8. Após o usuário estar criado, acesse os detalhes do mesmo, vá até a aba "Chaves", e adicione uma nova chave em JSON;

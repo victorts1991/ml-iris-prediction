@@ -1,5 +1,7 @@
 # ml-iris-prediction
 
+A flask API that consumes a prediction model trained by the Logistic Regression Classification algorithm.
+
 Após executar o git clone execute os comandos abaixo na raiz do projeto:
 
 ```

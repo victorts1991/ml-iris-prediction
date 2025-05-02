@@ -22,9 +22,11 @@ jobs:
       run: |
         gcloud auth configure-docker gcr.io
 
-    - name: Install kubectl using gcloud
+    - name: Install kubectl
       run: |
-        gcloud components install kubectl
+        grep -rhE ^deb /etc/apt/sources.list* | grep "cloud-sdk"
+        apt-get update
+        apt-get install -y kubectl
 
     - name: Setup Terraform CLI
       uses: hashicorp/setup-terraform@v2.0.2

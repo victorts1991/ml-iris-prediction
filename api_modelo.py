@@ -3,7 +3,7 @@ import logging
 import datetime
 import jwt
 from functools import wraps
-
+ 
 from flask import Flask, request, jsonify
 import joblib
 import numpy as np
@@ -54,8 +54,27 @@ def create_token(username):
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        # pegar token do header Authorization: Bearer <token>
-        # decodificar e checar expiração
+        token = None
+        if 'Authorization' in request.headers:
+            auth_header = request.headers['Authorization']
+            try:
+                token = auth_header.split()[1] # Bearer <token>
+            except IndexError:
+                return jsonify({'error': 'Token de autorização inválido'}), 401
+
+        if not token:
+            return jsonify({'error': 'Token de autorização ausente'}), 401
+
+        try:
+            data = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+            # Você pode adicionar lógica aqui para verificar se o usuário existe, etc.
+            # Se quiser passar o username para a função de rota:
+            # return f(current_user=data['username'], *args, **kwargs)
+            return f(*args, **kwargs)
+        except jwt.ExpiredSignatureError:
+            return jsonify({'error': 'Token expirado'}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({'error': 'Token inválido'}), 401
         return f(*args, **kwargs)
     return decorated
 

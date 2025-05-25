@@ -23,7 +23,3 @@ class Prediction(Base):
 # Função para criar as tabelas (chame isso uma vez na inicialização da aplicação, ou em um script separado)
 def create_db_tables():
     Base.metadata.create_all(engine)
-
-# Chame a função para garantir que as tabelas sejam criadas ao importar este módulo
-# Em um ambiente de produção, você pode querer controlar isso de forma mais explícita
-create_db_tables()

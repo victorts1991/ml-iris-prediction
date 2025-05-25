@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from core.config import settings
 from api.v1.endpoints import auth, predictions
 import logging
+from db.database import create_db_tables
 
 # Configuração de Logging (mantida aqui ou centralizada em config)
 logging.basicConfig(level=logging.INFO)
@@ -12,6 +13,11 @@ app = FastAPI(
     description="API para prever a espécie de flor Iris e registrar as predições.",
     version="1.0.0"
 )
+
+@app.on_event("startup")
+async def startup_event():
+    create_db_tables()
+    logger.info("Tabelas do banco de dados criadas/verificadas na inicialização.")
 
 # Incluir os routers
 app.include_router(auth.router, tags=["Autenticação"])

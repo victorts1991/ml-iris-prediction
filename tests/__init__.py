@@ -1,0 +1,1 @@
+# Deixe este arquivo vazio. Ele indica que 'tests' é um pacote Python.

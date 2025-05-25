@@ -1,0 +1,1 @@
+# Deixe este arquivo vazio. Ele indica que 'core' é um pacote Python.

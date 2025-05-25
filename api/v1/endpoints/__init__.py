@@ -1,0 +1,1 @@
+# Deixe este arquivo vazio. Ele indica que 'api' é um pacote Python.

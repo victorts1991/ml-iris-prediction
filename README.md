@@ -15,7 +15,7 @@ venv\Scripts\activate  # Windows
 
 pip install -r requirements.txt
 
-python3 app.py
+uvicorn main:app --reload --port 5000
 ```
 
 Documentação em Swagger:
@@ -29,6 +29,15 @@ Obs: Após instalar uma dependência nova, para atualizar o arquivo requirements
 ```
 pip freeze > requirements.txt
 ```
+
+Caso for executar o modelo, utilize o comando abaixo para criar um kernel para o arquivo ipynb e depois selecione ele em sua ferramenta de edição de código:
+
+```
+python3 -m ipykernel install --user --name=ml_iris_prediction_venv
+```
+
+
+
 
 # Deploy with Kubernetes on GCP manually:
 

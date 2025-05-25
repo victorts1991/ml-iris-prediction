@@ -7,8 +7,14 @@ terraform {
   }
 }
 
+variable "project_id" {
+  description = "The GCP project ID."
+  type        = string
+  # default = "ml-iris-prediction"
+}
+
 provider "google" {
-  project = "ml-iris-prediction"
+  project = var.project_id
   region  = "us-central1"
 }
 
@@ -17,5 +23,5 @@ resource "google_container_cluster" "primary" {
   location         = "us-central1"
   enable_autopilot = true
   network          = "default"
-  subnetwork       = "projects/ml-iris-prediction/regions/us-central1/subnetworks/default"
+  subnetwork       = "projects/${var.project_id}/regions/us-central1/subnetworks/default" 
 }

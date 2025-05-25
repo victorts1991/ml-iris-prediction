@@ -1,6 +1,36 @@
-# ml-iris-prediction
+# API de Predição Iris (MLOps End-to-End)
 
-A Flask API that consumes a prediction model trained by the Logistic Regression Classification algorithm. Deploy with IaC and Github Actions using Docker and Kubernetes on GCP.
+Este projeto demonstra uma solução completa de MLOps para previsão de demanda, utilizando um modelo de Machine Learning e uma API robusta. A arquitetura foi desenvolvida com foco em escalabilidade, manutenibilidade e automação de deploy.
+
+## Visão Geral do Projeto
+
+Este projeto de **MLOps end-to-end** foca na **previsão de demanda**, centralizado em uma **API em FastAPI** que incorpora validação de dados com **Pydantic**. A solução foi construída com um forte pilar de **Engenharia de Machine Learning**, abrangendo:
+
+* **Algoritmo de Machine Learning:** Utiliza um modelo de **Regressão Logística** para realizar as previsões da espécie Iris com base nas características fornecidas.
+* **Quality Assurance:** Implementa **testes unitários** abrangentes com **Pytest** para a lógica da API, a camada de carregamento do modelo e as operações de persistência de dados.
+* **Operationalization (MLOps):**
+    * **Containerização:** A aplicação é empacotada em imagens **Docker** para garantir ambientes consistentes e portabilidade.
+    * **Orquestração:** O deploy da API é gerenciado no **Kubernetes (GKE)** no **Google Cloud Platform (GCP)**, permitindo alta disponibilidade e escalabilidade.
+    * **Integração e Entrega Contínuas (CI/CD):** Um pipeline automatizado no **GitHub Actions** orquestra o build da imagem Docker, a execução dos testes e o deploy contínuo da aplicação no GKE.
+* **Infrastructure as Code (IaC):** Toda a infraestrutura necessária no GCP, incluindo o cluster Kubernetes, é provisionada e gerenciada via **Terraform**, garantindo ambientes reprodutíveis e versionados.
+* **Data Persistence:** As predições realizadas pela API são armazenadas e gerenciadas de forma eficiente em um banco de dados **NoSQL**, o **MongoDB Atlas**, para futuras análises ou monitoramento.
+
+Este projeto demonstra a capacidade de construir, testar e operacionalizar sistemas de IA escaláveis e manuteníveis em um ambiente de nuvem.
+
+## Tecnologias Utilizadas
+
+* **Linguagem:** Python
+* **Framework Web:** FastAPI
+* **Validação de Dados:** Pydantic
+* **Machine Learning:** Scikit-learn (Logistic Regression), Joblib
+* **Testes:** Pytest
+* **Containerização:** Docker
+* **Orquestração de Contêineres:** Kubernetes (K8s)
+* **Plataforma de Nuvem:** Google Cloud Platform (GCP)
+* **Serviços GCP:** Google Kubernetes Engine (GKE)
+* **Infraestrutura como Código (IaC):** Terraform
+* **CI/CD:** GitHub Actions
+* **Banco de Dados:** MongoDB Atlas (NoSQL)
 
 # Deploy local:
 

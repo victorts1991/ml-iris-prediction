@@ -9,6 +9,8 @@ jobs:
   deploy-gke:
     name: Deploy to GKE
     runs-on: ubuntu-latest
+    env: 
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -21,16 +23,16 @@ jobs:
     - name: Setup Python environment
       uses: actions/setup-python@v5
       with:
-        python-version: '3.9' 
+        python-version: '3.9'
 
     - name: Install Python dependencies for tests
       run: |
-        pip install -r requirements.txt 
+        pip install -r requirements.txt
       env:
         PYTHONPATH: "."
 
     - name: Run Pytest
-      run: pytest 
+      run: pytest
       env:
         PYTHONPATH: "."
 
@@ -38,15 +40,13 @@ jobs:
       run: |
         gcloud auth configure-docker gcr.io
 
-    - name: Install kubectl
+    - name: Install kubectl and gcloud CLI components (including envsubst) 
       run: |
         sudo apt-get update
-        sudo apt-get install apt-transport-https ca-certificates gnupg curl
+        sudo apt-get install -y apt-transport-https ca-certificates gnupg curl gettext 
         sudo curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
         sudo echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-        sudo apt-get update && sudo apt-get install google-cloud-cli
-        sudo apt-get install -y kubectl
-        sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
+        sudo apt-get update && sudo apt-get install -y google-cloud-cli kubectl google-cloud-sdk-gke-gcloud-auth-plugin
 
     - name: Setup Terraform CLI
       uses: hashicorp/setup-terraform@v2.0.2
@@ -54,26 +54,34 @@ jobs:
     - name: Build, tag, and push image to GCR
       run: |
         docker build -t api-ml-iris-prediction .
-        docker tag api-ml-iris-prediction gcr.io/ml-iris-prediction/api-ml-iris-prediction:latest
-        docker push gcr.io/ml-iris-prediction/api-ml-iris-prediction:latest
+        # Usa a variável de ambiente GCP_PROJECT_ID
+        docker tag api-ml-iris-prediction gcr.io/${{ env.GCP_PROJECT_ID }}/api-ml-iris-prediction:latest
+        docker push gcr.io/${{ env.GCP_PROJECT_ID }}/api-ml-iris-prediction:latest
 
     - name: Terraform Init
       id: init
       run: |
         cd ./iac
-        terraform init
+        # Passa a variável de ambiente para o Terraform
+        terraform init -backend-config="bucket=${{ env.GCP_PROJECT_ID }}-tfstate" # Se seu bucket de tfstate usa o ID do projeto
+      env: 
+        TF_VAR_project_id: ${{ env.GCP_PROJECT_ID }}
     
     - name: Terraform Validate
       id: validate
       run: |
         cd ./iac
         terraform validate -no-color
+      env: 
+        TF_VAR_project_id: ${{ env.GCP_PROJECT_ID }}
     
     - name: Terraform Plan
       id: plan
       run: |
         cd ./iac
         terraform plan -no-color
+      env:
+        TF_VAR_project_id: ${{ env.GCP_PROJECT_ID }}
       continue-on-error: true    
 
     - name: Terraform Apply
@@ -81,14 +89,16 @@ jobs:
       run: |
         cd ./iac
         terraform apply -auto-approve
+      env: 
+        TF_VAR_project_id: ${{ env.GCP_PROJECT_ID }}
       continue-on-error: true
     
     - name: Get GKE Cluster Credentials
       run: |
-        gcloud container clusters get-credentials cluster-ml-iris-prediction --region us-central1 --project ml-iris-prediction
+        gcloud container clusters get-credentials cluster-ml-iris-prediction --region us-central1 --project ${{ env.GCP_PROJECT_ID }}
 
     - name: Deploy API to GKE
       run: |
-        cd ./iac/kubernetes-yamls
-        kubectl apply -f deployment.yaml
+        cd ./kubernetes-yamls
+        envsubst < deployment.yaml | kubectl apply -f -
         kubectl apply -f svc.yaml

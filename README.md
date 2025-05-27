@@ -122,13 +122,16 @@ kubectl apply -f svc.yaml
 9. Com isso será feito o download da sua chave;
 10. Vá até o seu repositório no Github e clique em "Settings";
 11. Na barra lateral esquerda, clique em "Secrets and variables" (Segredos e variáveis) e depois em "Actions";
-12. Clique em "New repository secret" (Novo segredo do repositório);
-13. No campo Name, digite "GCP_CREDENTIALS_JSON" (o mesmo nome que você usou na sua configuração do GitHub Actions);
-14. No campo Value, cole o conteúdo completo do arquivo JSON que você baixou. Certifique-se de incluir as chaves { e } no início e no final;
-15. Clique em "Add secret" (Adicionar segredo);
-16. Após isso efetue um commit na branch main, com isso o pipeline do Github Actions será acionado e efetuará o deploy da aplicação no GKE;
-17. Após o pipeline ter sido concluido, execute os itens 4, 5, 6 e 7 do passo a passo acima;
 
-TODO:
+12. Crie o secret para as credenciais da conta de serviço:
+  
+  * No campo `Name`, digite `"GCP_CREDENTIALS_JSON"` (o mesmo nome que você usou na sua configuração do GitHub Actions).
+  * No campo `Value`, cole o conteúdo completo do arquivo JSON que você baixou. Certifique-se de incluir as chaves `{` e `}` no início e no final.
+  * Clique em "Add secret" (Adicionar segredo).
 
-- Ajustar o pipeline no Github Actions
+  * Clique novamente em "New repository secret".
+  * No campo `Name`, digite `"GCP_PROJECT_ID"`.
+  * No campo `Value`, cole o **ID do seu projeto GCP** (por exemplo, `meu-projeto-exemplo-12345`). **NÃO cole o número do projeto, mas sim o ID alfanumérico.**
+  * Clique em "Add secret" (Adicionar segredo).
+13. Após isso efetue um commit na branch main, com isso o pipeline do Github Actions será acionado e efetuará o deploy da aplicação no GKE;
+14. Após o pipeline ter sido concluido, execute os itens 4, 5, 6 e 7 do passo a passo acima;

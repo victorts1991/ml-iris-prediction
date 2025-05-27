@@ -99,6 +99,6 @@ jobs:
 
     - name: Deploy API to GKE
       run: |
-        cd ./kubernetes-yamls
+        cd ./iac/kubernetes-yamls
         envsubst < deployment.yaml | kubectl apply -f -
         kubectl apply -f svc.yaml

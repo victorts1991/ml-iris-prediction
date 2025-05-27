@@ -24,7 +24,7 @@ spec:
       schedulerName: default-scheduler
       terminationGracePeriodSeconds: 30
       containers:
-      - image: gcr.io/ml-iris-prediction/api-ml-iris-prediction:latest
+      - image: gcr.io/${GCP_PROJECT_ID}/api-ml-iris-prediction:latest
         imagePullPolicy: Always
         name: api-ml-iris-prediction-container
         resources:

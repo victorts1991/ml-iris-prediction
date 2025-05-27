@@ -78,24 +78,25 @@ python3 -m ipykernel install --user --name=ml_iris_prediction_venv
 3. Execute os comandos abaixo:
 
 ```
-docker build -t api-ml-iris-prediction . 
+export GCP_PROJECT_ID="seu-projeto-id-aqui"
 
-# Altere o  ml-iris-prediction para o nome do projeto criado no GCP
-docker tag api-ml-iris-prediction gcr.io/ml-iris-prediction/api-ml-iris-prediction:latest
-docker push gcr.io/ml-iris-prediction/api-ml-iris-prediction:latest
+docker build -t api-ml-iris-prediction .
+docker tag api-ml-iris-prediction gcr.io/${GCP_PROJECT_ID}/api-ml-iris-prediction:latest
+docker push gcr.io/${GCP_PROJECT_ID}/api-ml-iris-prediction:latest
 
 cd ./iac
 
-export TF_VAR_project_id="seu-id-do-projeto-gcp"
+export TF_VAR_project_id=${GCP_PROJECT_ID}
 terraform init
 terraform plan
 terraform apply --auto-approve
 
 cd ./kubernetes-yamls
 
-# Altere o  ml-iris-prediction para o nome do projeto criado no GCP
-gcloud container clusters get-credentials cluster-ml-iris-prediction --region us-central1 --project ml-iris-prediction
-kubectl apply -f deployment.yaml
+gcloud container clusters get-credentials cluster-ml-iris-prediction --region us-central1 --project ${GCP_PROJECT_ID}
+
+# Para o deployment é necessário que seja feito o apply de forma diferente, para que o mesmo use a varíavel de ambiente GCP_PROJECT_ID
+envsubst < deployment.yaml | kubectl apply -f -
 kubectl apply -f svc.yaml
 ```
 

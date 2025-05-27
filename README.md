@@ -135,3 +135,4 @@ kubectl apply -f svc.yaml
   * Clique em "Add secret" (Adicionar segredo).
 13. Após isso efetue um commit na branch main, com isso o pipeline do Github Actions será acionado e efetuará o deploy da aplicação no GKE;
 14. Após o pipeline ter sido concluido, execute os itens 4, 5, 6 e 7 do passo a passo acima;
+
